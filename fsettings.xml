@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--pls refer to http://www.machine-vison.com.cn for detail infomation
+-->
+<ps>
+  <lPktNum>50</lPktNum>
+  <CCD1>
+    <Cam>
+      <cam_serial>0</cam_serial>
+      <cam_posX>0</cam_posX>
+      <cam_posY>0</cam_posY>
+      <cam_imgWidth>658</cam_imgWidth>
+      <cam_imgHeight>492</cam_imgHeight>
+    </Cam>
+    <role>0</role>
+  </CCD1>
+  <CCD2>
+    <Cam>
+      <cam_serial>0</cam_serial>
+      <cam_posX>0</cam_posX>
+      <cam_posY>0</cam_posY>
+      <cam_imgWidth>658</cam_imgWidth>
+      <cam_imgHeight>492</cam_imgHeight>
+    </Cam>
+    <role>0</role>
+  </CCD2>
+  <CCD3>
+    <Cam>
+      <cam_serial>0</cam_serial>
+      <cam_posX>0</cam_posX>
+      <cam_posY>0</cam_posY>
+      <cam_imgWidth>658</cam_imgWidth>
+      <cam_imgHeight>492</cam_imgHeight>
+      <cam_VR>100</cam_VR>
+      <cam_UB>100</cam_UB>
+      <cam_WG>100</cam_WG>
+    </Cam>
+    <role>0</role>
+  </CCD3>
+  <CCD4>
+    <Cam>
+      <cam_serial>0</cam_serial>
+      <cam_posX>0</cam_posX>
+      <cam_posY>0</cam_posY>
+      <cam_imgWidth>658</cam_imgWidth>
+      <cam_imgHeight>492</cam_imgHeight>
+      <cam_VR>100</cam_VR>
+      <cam_UB>100</cam_UB>
+      <cam_WG>100</cam_WG>
+    </Cam>
+    <role>0</role>
+  </CCD4>
+</ps>

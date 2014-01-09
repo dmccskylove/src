@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ISBOTCAP" />
+		<Option pch_mode="2" />
+		<Option compiler="msvc10" />
+		<Build>
+			<Target title="Release">
+				<Option output="../bin/Release/ISBOTCAP" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../obj/Release/" />
+				<Option type="0" />
+				<Option compiler="msvc10" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="/MD" />
+					<Add option="/O2" />
+					<Add option="/Ox" />
+					<Add option='/Fp&quot;..\obj\Release\ISBOTCAP.pch&quot;' />
+					<Add option="/DNDEBUG" />
+					<Add directory="$(#wx)/lib/vc_lib/mswu" />
+					<Add directory="$(HALCONROOT)/include" />
+					<Add directory="$(HALCONROOT)/include/cpp" />
+					<Add directory="$(PYLON_ROOT)/include" />
+					<Add directory="$(PYLON_GENICAM_ROOT)/library/CPP/include" />
+					<Add directory="." />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$(#wx)/lib/vc_lib/mswu" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="/NODEFAULTLIB:libcmt.lib" />
+					<Add library="msvcrt.lib" />
+					<Add library="wxbase29u_xml.lib" />
+					<Add library="wxmsw29u_adv.lib" />
+					<Add library="wxmsw29u_core.lib" />
+					<Add library="wxbase29u.lib" />
+					<Add library="wxpng.lib" />
+					<Add library="wxjpeg.lib" />
+					<Add library="wxtiff.lib" />
+					<Add library="wxzlib.lib" />
+					<Add library="wxexpat.lib" />
+					<Add library="HalconCpp.lib" />
+					<Add library="ctb-0.16.lib" />
+					<Add library="PylonBase_MD_VC100.lib" />
+					<Add library="PylonGUI_MD_VC100.lib" />
+					<Add library="GCBase_MD_VC100_$(PYLON_GENICAM_VERSION).lib" />
+					<Add directory="$(#wx)/lib/vc_lib" />
+					<Add directory="$(HALCONROOT)/lib/x86sse2-win32" />
+					<Add directory="$(PYLON_ROOT)/lib/win32" />
+					<Add directory="$(PYLON_GENICAM_ROOT)/library/CPP/Lib/Win32_i86" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="/EHc" />
+			<Add option="/EHs" />
+			<Add option="/W3" />
+			<Add option="/Zc:auto" />
+			<Add option="/Zc:wchar_t" />
+			<Add option='/FI&quot;wx_pch.h&quot;' />
+			<Add option='/Yc&quot;wx_pch.h&quot;' />
+			<Add option="/DWIN32" />
+			<Add option="/D__WIN32__" />
+			<Add option="/D__WXMSW__" />
+			<Add option="/DwxUSE_UNICODE" />
+			<Add option="/D_WINDOWS" />
+			<Add option="/D_CRT_SECURE_DEPRECATE" />
+			<Add option="/D_CRT_NONSTDC_NO_DEPRECATE" />
+			<Add option="/D_CRT_SECURE_NO_WARNINGS" />
+			<Add directory="$(#wx)/include" />
+			<Add directory="$(#wx)/contrib/include" />
+		</Compiler>
+		<ResourceCompiler>
+			<Add directory="$(#wx)/include" />
+		</ResourceCompiler>
+		<Linker>
+			<Add option="/INCREMENTAL:NO" />
+			<Add option="/SUBSYSTEM:WINDOWS" />
+			<Add library="winmm.lib" />
+			<Add library="rpcrt4.lib" />
+			<Add library="kernel32.lib" />
+			<Add library="user32.lib" />
+			<Add library="gdi32.lib" />
+			<Add library="winspool.lib" />
+			<Add library="comdlg32.lib" />
+			<Add library="advapi32.lib" />
+			<Add library="shell32.lib" />
+			<Add library="ole32.lib" />
+			<Add library="oleaut32.lib" />
+			<Add library="uuid.lib" />
+			<Add library="comctl32.lib" />
+			<Add library="wsock32.lib" />
+			<Add library="odbc32.lib" />
+		</Linker>
+		<Unit filename="ISBOTCAPApp.cpp" />
+		<Unit filename="ISBOTCAPApp.h" />
+		<Unit filename="ISBOTCAPMain.cpp" />
+		<Unit filename="ISBOTCAPMain.h" />
+		<Unit filename="core/ISHCAPDef.h" />
+		<Unit filename="core/SNList.h" />
+		<Unit filename="core/global_funcs.cpp" />
+		<Unit filename="core/gvVisionCCD.cpp" />
+		<Unit filename="core/gvVisionCCD.h" />
+		<Unit filename="core/gvVisionCam.cpp" />
+		<Unit filename="core/gvVisionCam.h" />
+		<Unit filename="core/gvVisionCam_acA.cpp" />
+		<Unit filename="core/gvVisionCam_acA.h" />
+		<Unit filename="core/gvVisionImage.cpp" />
+		<Unit filename="core/gvVisionImage.h" />
+		<Unit filename="core/gvVisionManager.cpp" />
+		<Unit filename="core/gvVisionManager.h" />
+		<Unit filename="core/gvVisionROI.cpp" />
+		<Unit filename="core/gvVisionROI.h" />
+		<Unit filename="core/thread_imgProc.cpp" />
+		<Unit filename="core/thread_imgProc.h" />
+		<Unit filename="dlgSettingsCam.cpp" />
+		<Unit filename="dlgSettingsCam.h" />
+		<Unit filename="dlgarticleedit.cpp" />
+		<Unit filename="dlgarticleedit.h" />
+		<Unit filename="dlgarticlenew.cpp" />
+		<Unit filename="dlgarticlenew.h" />
+		<Unit filename="dlgshutdown.cpp" />
+		<Unit filename="dlgshutdown.h" />
+		<Unit filename="gvVisionImage_botcap.cpp" />
+		<Unit filename="gvVisionImage_botcap.h" />
+		<Unit filename="gvVisionImage_botcap_front.cpp" />
+		<Unit filename="gvVisionImage_botcap_front.h" />
+		<Unit filename="gvVisionImage_botcap_obverse.cpp" />
+		<Unit filename="gvVisionImage_botcap_obverse.h" />
+		<Unit filename="gvVisionImage_botcap_side.cpp" />
+		<Unit filename="gvVisionImage_botcap_side.h" />
+		<Unit filename="gvVisionROI_circle.cpp" />
+		<Unit filename="gvVisionROI_circle.h" />
+		<Unit filename="gvVisionROI_rect.cpp" />
+		<Unit filename="gvVisionROI_rect.h" />
+		<Unit filename="gvVisionTask.cpp" />
+		<Unit filename="gvVisionTask.h" />
+		<Unit filename="gvVisionTask_black.cpp" />
+		<Unit filename="gvVisionTask_black.h" />
+		<Unit filename="gvVisionTask_color.cpp" />
+		<Unit filename="gvVisionTask_color.h" />
+		<Unit filename="gvVisionTask_crack.cpp" />
+		<Unit filename="gvVisionTask_crack.h" />
+		<Unit filename="gvVisionTask_logo.cpp" />
+		<Unit filename="gvVisionTask_logo.h" />
+		<Unit filename="pantaskblack.cpp" />
+		<Unit filename="pantaskblack.h" />
+		<Unit filename="pantaskcolor.cpp" />
+		<Unit filename="pantaskcolor.h" />
+		<Unit filename="pantasklogo.cpp" />
+		<Unit filename="pantasklogo.h" />
+		<Unit filename="resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="wx_pch.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
