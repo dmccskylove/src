@@ -13,5 +13,6 @@ gvVisionTask_crack::~gvVisionTask_crack()
 
 bool gvVisionTask_crack::gvTask_inspect( Hobject image_src, Hobject *outRegion_defects )
 {
+	Hobject a;
 	return false;
 }
