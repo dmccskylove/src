@@ -249,17 +249,15 @@ void panTaskColor::OnButton1Click( wxCommandEvent& event )
 	Hobject  image_src,region_loc,ImageReduced, Red, Green, Blue;
 	HTuple  Mean_red, Deviation,  Mean_green,Mean_blue;
 	image_src = c_pgvVisionImage->gvIMG_GetImage();
-	if(c_pgvVisionImage->_insp_loc(image_src,&region_loc))
-	{
-		reduce_domain(region_loc, c_pgvTask->gvTask_GetROI()->gvROI_GetROI(), &ImageReduced);
-		decompose3(ImageReduced, &Red, &Green, &Blue);
-		intensity(ImageReduced, Red, &Mean_red, &Deviation);
-		intensity(ImageReduced, Green, &Mean_green, &Deviation);
-		intensity(ImageReduced, Blue, &Mean_blue, &Deviation);
-		m_actualblue->SetValue(Mean_blue[0].L());
-		m_actualred->SetValue(Mean_red[0].L());
-		m_actualgreen->SetValue(Mean_green[0].L());
-	}
+
+	reduce_domain(image_src, c_pgvTask->gvTask_GetROI()->gvROI_GetROI(), &ImageReduced);
+	decompose3(ImageReduced, &Red, &Green, &Blue);
+	intensity(ImageReduced, Red, &Mean_red, &Deviation);
+	intensity(ImageReduced, Green, &Mean_green, &Deviation);
+	intensity(ImageReduced, Blue, &Mean_blue, &Deviation);
+	m_actualblue->SetValue(Mean_blue[0].L());
+	m_actualred->SetValue(Mean_red[0].L());
+	m_actualgreen->SetValue(Mean_green[0].L());
 
 }
 

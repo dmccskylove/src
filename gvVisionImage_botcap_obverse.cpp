@@ -47,6 +47,8 @@ bool gvVisionImage_botcap_obverse::_insp_loc( Hobject image_src, Hobject *outReg
 	count_obj(region_sel, &numRegions);
 	if ( 1 == numRegions )
 	{
+		disp_obj(ho_Image,hl_WindowID);
+		disp_obj(region_sel,hl_WindowID);
 		copy_obj(region_sel, &(*outRegion_loc), 1, 1);
 		return true;
 	}

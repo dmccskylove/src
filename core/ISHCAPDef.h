@@ -91,7 +91,6 @@ enum E_TASK_TYPE_ALL
 {
 	TASKTYPE_LOGO = 0,
     TASKTYPE_BLACK,
-    TASKTYPE_CRACK,
 	TASKTYPE_COLOR,
     TASK_TYPE_NUM,
 };
@@ -100,7 +99,6 @@ static const char *g_pchTask_ALL[TASK_TYPE_NUM] =
 {
     "ÉÌ±ê",
     "ºÚ°ß",
-    "ÁÑÎÆ",
 	"ÑÕÉ«",
 };
 

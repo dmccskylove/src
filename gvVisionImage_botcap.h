@@ -46,6 +46,8 @@ class gvVisionImage_botcap : public gvVisionImage
 			return m_minarea;
 		}
 
+
+
 		bool gvIMG_GetisLoadImage(){return m_bloadimage;}
 
 		void gvIMG_ShowAllROI();
@@ -75,6 +77,7 @@ class gvVisionImage_botcap : public gvVisionImage
 		bool		m_bROIMoving;
 		bool 		m_bROISizOut;
 		bool 		m_bloadimage;
+
 
 
 

@@ -25,6 +25,9 @@
 ////@end includes
 
 #include "dlgSettingsCam.h"
+#include "core\gvVisionCCD.h"
+#include "core\gvVisionCam_acA.h"
+#include "core\gvVisionManager.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -48,6 +51,14 @@ BEGIN_EVENT_TABLE( dlgSettingsCam, wxDialog )
 
     EVT_COMMAND_SCROLL_CHANGED( ID_SLIDER_GAIN, dlgSettingsCam::OnSliderGainScrollChanged )
 
+    EVT_SPINCTRL( ID_SPINCTRL6, dlgSettingsCam::OnSpinctrl6Updated )
+
+    EVT_SPINCTRL( ID_SPINCTRL1, dlgSettingsCam::OnSpinctrl1Updated )
+
+    EVT_BUTTON( wxID_CANCEL, dlgSettingsCam::OnCancelClick )
+
+    EVT_BUTTON( wxID_OK, dlgSettingsCam::OnOkClick )
+
 ////@end dlgSettingsCam event table entries
 
 END_EVENT_TABLE()
@@ -62,8 +73,12 @@ dlgSettingsCam::dlgSettingsCam()
     Init();
 }
 
-dlgSettingsCam::dlgSettingsCam( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+dlgSettingsCam::dlgSettingsCam(gvVisionCCD * pgvVisionCCD, wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
+	c_pgvVisionCCD = pgvVisionCCD;
+	c_pgvVisionCam =(gvVisionCam_acA*) pgvVisionCCD->get_VisionCam();
+	c_pgvVisionManager =pgvVisionCCD->get_VisionManager();
+ /**<  */
     Init();
     Create(parent, id, caption, pos, size, style);
 }
@@ -86,6 +101,7 @@ bool dlgSettingsCam::Create( wxWindow* parent, wxWindowID id, const wxString& ca
     }
     Centre();
 ////@end dlgSettingsCam creation
+	ReadParam();
     return true;
 }
 
@@ -110,6 +126,8 @@ void dlgSettingsCam::Init()
 ////@begin dlgSettingsCam member initialisation
     m_sldExpo = NULL;
     m_sldGain = NULL;
+    m_rejectdelay = NULL;
+    m_idxPort = NULL;
 ////@end dlgSettingsCam member initialisation
 }
 
@@ -155,22 +173,44 @@ void dlgSettingsCam::CreateControls()
 
     itemNotebook3->AddPage(itemPanel8, wxGetTranslation(wxString() + (wxChar) 0x589E + (wxChar) 0x76CA));
 
+    wxPanel* itemPanel12 = new wxPanel( itemNotebook3, ID_PANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+    wxBoxSizer* itemBoxSizer13 = new wxBoxSizer(wxVERTICAL);
+    itemPanel12->SetSizer(itemBoxSizer13);
+
+    wxBoxSizer* itemBoxSizer14 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer13->Add(itemBoxSizer14, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxStaticText* itemStaticText15 = new wxStaticText( itemPanel12, wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x5254 + (wxChar) 0x9664 + (wxChar) 0x5EF6 + (wxChar) 0x65F6), wxDefaultPosition, wxSize(100, -1), 0 );
+    itemBoxSizer14->Add(itemStaticText15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_rejectdelay = new wxSpinCtrl( itemPanel12, ID_SPINCTRL6, _T("0"), wxDefaultPosition, wxSize(200, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemBoxSizer14->Add(m_rejectdelay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxHORIZONTAL);
+    itemBoxSizer13->Add(itemBoxSizer17, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxStaticText* itemStaticText18 = new wxStaticText( itemPanel12, wxID_STATIC, wxGetTranslation(wxString(wxT("IO")) + (wxChar) 0x7AEF + (wxChar) 0x53E3), wxDefaultPosition, wxSize(100, -1), 0 );
+    itemBoxSizer17->Add(itemStaticText18, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_idxPort = new wxSpinCtrl( itemPanel12, ID_SPINCTRL1, _T("0"), wxDefaultPosition, wxSize(200, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    itemBoxSizer17->Add(m_idxPort, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    itemNotebook3->AddPage(itemPanel12, wxGetTranslation(wxString() + (wxChar) 0x5254 + (wxChar) 0x9664));
+
     itemBoxSizer2->Add(itemNotebook3, 0, wxGROW|wxALL, 0);
 
-    wxPanel* itemPanel12 = new wxPanel( itemDialog1, ID_PANEL4, wxDefaultPosition, wxSize(-1, 45), wxTAB_TRAVERSAL );
-    itemBoxSizer2->Add(itemPanel12, 0, wxGROW|wxALL, 0);
+    wxPanel* itemPanel20 = new wxPanel( itemDialog1, ID_PANEL4, wxDefaultPosition, wxSize(-1, 45), wxTAB_TRAVERSAL );
+    itemBoxSizer2->Add(itemPanel20, 0, wxGROW|wxALL, 0);
 
-    wxStdDialogButtonSizer* itemStdDialogButtonSizer13 = new wxStdDialogButtonSizer;
+    wxStdDialogButtonSizer* itemStdDialogButtonSizer21 = new wxStdDialogButtonSizer;
 
-    itemPanel12->SetSizer(itemStdDialogButtonSizer13);
+    itemPanel20->SetSizer(itemStdDialogButtonSizer21);
 
-    wxButton* itemButton14 = new wxButton( itemPanel12, wxID_CANCEL, wxGetTranslation(wxString() + (wxChar) 0x53D6 + (wxChar) 0x6D88), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer13->AddButton(itemButton14);
+    wxButton* itemButton22 = new wxButton( itemPanel20, wxID_CANCEL, wxGetTranslation(wxString() + (wxChar) 0x53D6 + (wxChar) 0x6D88), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer21->AddButton(itemButton22);
 
-    wxButton* itemButton15 = new wxButton( itemPanel12, wxID_OK, wxGetTranslation(wxString() + (wxChar) 0x4FDD + (wxChar) 0x5B58), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStdDialogButtonSizer13->AddButton(itemButton15);
+    wxButton* itemButton23 = new wxButton( itemPanel20, wxID_OK, wxGetTranslation(wxString() + (wxChar) 0x4FDD + (wxChar) 0x5B58), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStdDialogButtonSizer21->AddButton(itemButton23);
 
-    itemStdDialogButtonSizer13->Realize();
+    itemStdDialogButtonSizer21->Realize();
 
 ////@end dlgSettingsCam content construction
 }
@@ -182,10 +222,7 @@ void dlgSettingsCam::CreateControls()
 
 void dlgSettingsCam::OnSliderExpoScrollChanged( wxScrollEvent& event )
 {
-////@begin wxEVT_SCROLL_CHANGED event handler for ID_SLIDER_EXPO in dlgCamSettings.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_SCROLL_CHANGED event handler for ID_SLIDER_EXPO in dlgCamSettings.
+	c_pgvVisionCam->cam_SetExpo(m_sldExpo->GetValue());
 }
 
 
@@ -195,10 +232,7 @@ void dlgSettingsCam::OnSliderExpoScrollChanged( wxScrollEvent& event )
 
 void dlgSettingsCam::OnSliderGainScrollChanged( wxScrollEvent& event )
 {
-////@begin wxEVT_SCROLL_CHANGED event handler for ID_SLIDER_GAIN in dlgCamSettings.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_SCROLL_CHANGED event handler for ID_SLIDER_GAIN in dlgCamSettings.
+	c_pgvVisionCam->cam_SetGain(m_sldGain->GetValue());
 }
 
 
@@ -236,3 +270,63 @@ wxIcon dlgSettingsCam::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end dlgSettingsCam icon retrieval
 }
+
+
+/*
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL6
+ */
+
+void dlgSettingsCam::OnSpinctrl6Updated( wxSpinEvent& event )
+{
+	c_pgvVisionCCD->set_Rejectdelay(m_rejectdelay->GetValue());
+}
+
+
+/*
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_OK
+ */
+
+void dlgSettingsCam::OnOkClick( wxCommandEvent& event )
+{
+	SaveParam();
+	wxString filename = c_pgvVisionManager->gvMgr_getConfigFile();
+	c_pgvVisionManager->gvMgr_SaveConfig(filename,FALSE);
+}
+
+
+/*
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for wxID_CANCEL
+ */
+
+void dlgSettingsCam::OnCancelClick( wxCommandEvent& event )
+{
+
+}
+
+
+void dlgSettingsCam::ReadParam()
+{
+	m_sldExpo->SetValue(c_pgvVisionCam->getExpo());
+	m_sldGain->SetValue(c_pgvVisionCam->getGain());
+	m_rejectdelay->SetValue(c_pgvVisionCCD->get_Rejectdelay());
+	m_idxPort->SetValue(c_pgvVisionManager->get_idxPort());
+}
+void dlgSettingsCam::SaveParam()
+{
+	c_pgvVisionCam->cam_SetExpo(m_sldExpo->GetValue());
+	c_pgvVisionCam->cam_SetGain(m_sldGain->GetValue());
+	c_pgvVisionCCD->set_Rejectdelay(m_rejectdelay->GetValue());
+	c_pgvVisionManager->set_idxPort(m_idxPort->GetValue());
+
+}
+
+
+/*
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL1
+ */
+
+void dlgSettingsCam::OnSpinctrl1Updated( wxSpinEvent& event )
+{
+
+}
+

@@ -11,6 +11,7 @@ gvVisionImage_botcap::gvVisionImage_botcap(gvVisionCCD* pgvVisionCCD, int imageW
 		c_pgvVisionCCD = pgvVisionCCD;
 		m_bROIMoving = false;
 		m_bloadimage = false;
+
 }
 
 gvVisionImage_botcap::~gvVisionImage_botcap()
@@ -52,7 +53,7 @@ void gvVisionImage_botcap::gvIMG_ReadParam( wxXmlNode* pNode_parent )
 	vec_pTask.clear();
 
 	int taskCnt = ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("taskCnt"),1);
-	m_minarea = ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("m_minarea"),30);
+	m_minarea = ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("m_minarea"),70000);
 
 	for(iIndex=0;	iIndex<taskCnt;iIndex++)
 	{
@@ -146,6 +147,7 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 
 	/**< 产品定位 */
 	bool isSuccess = _insp_loc(ho_Image,&region_loc);
+	bool isdefcts 	  = false;
 	if( isSuccess )
 	{
 //		wxMessageBox(wxT("定位！"));
@@ -153,7 +155,8 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 		for(iIndex=0;iIndex<uiTaskCnt;iIndex++)
 		{
 			/**< 缺陷检测 */
-			vec_pTask.at(iIndex)->gvTask_inspect(ImageReduced,&region_defects);
+			if(false == vec_pTask.at(iIndex)->gvTask_inspect(ImageReduced,&region_defects))
+			isdefcts =true;
 
 			/**< 缺陷串联 */
 			copy_obj(region_concat_defects,&region_temp1,1,-1);
@@ -167,6 +170,11 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 	{
 		disp_obj(ho_Image,hl_WindowID);
 		disp_obj(region_concat_defects,hl_WindowID);
+		isdefcts =true;
+	}
+	if(isdefcts)
+	{
+		c_pgvVisionCCD->vec_Result.push_back(c_pgvVisionCCD->get_Rejectdelay());
 	}
 }
 
@@ -353,6 +361,8 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 {
 	int iIndex = 0;
 	int default_pitch = 10;
+	m_idxActiveROI = -1;
+
 	Hlong uiX,uiY,outradius,inradius,Row1, Column1, Row2, Column2, button;
 		set_check("~give_error");
 	if( H_MSG_FAIL == get_mposition( hl_WindowID,&Row1,&Column1,&button ) )
@@ -385,7 +395,7 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 					{
 						set_mshape( hl_WindowID,"Size All");
 						m_idxActiveROI = iIndex;
-						return  ;
+						break ;
 					}
 					else if(offset>inradius-default_pitch&&
 							offset<inradius+default_pitch)
@@ -401,7 +411,7 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 						}
 						m_idxActiveROI = iIndex;
 						m_bROISizOut = false;
-						return ;
+						return  ;
 					}
 					else if(offset>outradius-default_pitch&&
 								offset<outradius+default_pitch)
@@ -419,11 +429,7 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 						m_bROISizOut = true;
 						return  ;
 					}
-					else
-					{
-						set_mshape( hl_WindowID,"arrow");
-						m_idxActiveROI = -1;
-					}
+
 					break;
 				}
 
@@ -445,7 +451,7 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 					{
 						set_mshape( hl_WindowID,"Size All");
 						m_idxActiveROI = iIndex;
-						return  ;
+						break  ;
 					}
 					else if ( ( m_rowMoving > Row1 ) &&
 						( m_rowMoving < Row2 - default_pitch ) &&
@@ -465,11 +471,6 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 						m_idxActiveROI = iIndex;
 						return  ;
 					}
-					else
-					{
-						set_mshape( hl_WindowID,"arrow");
-						m_idxActiveROI = -1;
-					}
 					break;
 				}
 
@@ -477,5 +478,9 @@ void gvVisionImage_botcap::gvIMG_SetROImshape(int x,int y)
 				break;
 			}
 		}//for ( iIndex=0; iIndex<gvIMG_GetTaskCnt(); iIndex++ )
+		if(-1==m_idxActiveROI)
+		{
+			set_mshape( hl_WindowID,"arrow");
+		}
 	}//在图像框内
 }

@@ -17,6 +17,7 @@ gvVisionCCD::gvVisionCCD( unsigned int id,
     c_pgvVisionCam = nullptr;
     m_isMemory_Ready = false;
     e_Role = CCDROLE_FRONT;
+    m_isUsing =true;
 }
 
 

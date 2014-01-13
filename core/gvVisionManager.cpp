@@ -3,6 +3,9 @@
 #include "gvVisionCam.h"
 #include "gvVisionImage.h"
 #include "thread_imgProc.h"
+#include "thread_rejcProc.h"
+#include "gvVisionIO_PCI7230.h"
+
 
 gvVisionManager::gvVisionManager( )
 {
@@ -13,6 +16,7 @@ gvVisionManager::gvVisionManager( )
     {
         c_pgvVisionCCD[iIndex] = nullptr;
         c_pthread_imageproc[iIndex] = NULL;
+        c_pthread_rejcProc[iIndex] = NULL;
         //m_hEvent_io[iIndex] = nullptr;
     }//for ( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM;iIndex++ )
 
@@ -22,6 +26,7 @@ gvVisionManager::gvVisionManager( )
     m_isEMG = false;
 	m_idxActiveCCD =1;
     e_ProgramStatus = PSTATUS_unLoad;
+    m_bReject =false;
 }
 
 
@@ -110,6 +115,7 @@ bool gvVisionManager::gvMgr_SaveConfig( wxString filename, bool isfSettings )
 
     /**<  */
     ISHCAP_API::xml_SetNodeValueL(pNode_root, wxT("lPktNum"), m_lPktNum );
+    ISHCAP_API::xml_SetNodeValueL(pNode_root, wxT("idxPort"), m_idxPort );
     int iIndex = 0;
     for ( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM; iIndex++ )
     {
@@ -127,22 +133,24 @@ bool gvVisionManager::gvMgr_SaveConfig( wxString filename, bool isfSettings )
 
 bool gvVisionManager::gvMgr_Init()
 {
-    /**< 打开串口 */
-    c_pSerialPort = new ctb::SerialPort();
-    int iRetVal = c_pSerialPort->Open( wxString("COM1"),
-                                       19200,
-                                       wxString("8N1"),
-                                       ctb::SerialPort::NoFlowControl );
-    if( iRetVal >= 0 )
-    {
-        c_pSerialPort->Writev("C",sizeof("C"),10);
-    }
-    else
-    {
-        c_pSerialPort = nullptr;
-        wxMessageBox(wxT("串口打开失败！"));
-    }
+//    /**< 打开串口 */
+//    c_pSerialPort = new ctb::SerialPort();
+//    int iRetVal = c_pSerialPort->Open( wxString("COM1"),
+//                                       19200,
+//                                       wxString("8N1"),
+//                                       ctb::SerialPort::NoFlowControl );
+//    if( iRetVal >= 0 )
+//    {
+//        c_pSerialPort->Writev("C",sizeof("C"),10);
+//    }
+//    else
+//    {
+//        c_pSerialPort = nullptr;
+//        wxMessageBox(wxT("串口打开失败！"));
+//    }
 
+	c_pgvVisionIO = new gvVisionIO_pci7230(this);
+	c_pgvVisionIO->gvIO_Init();
     /**< 读取出厂设置文件 */
     wxString filename = wxGetCwd() + wxT("\\fsettings.xml");
 
@@ -157,7 +165,7 @@ bool gvVisionManager::gvMgr_Init()
     }//if ( wxFileExists(filename) )
 
     m_lPktNum = ISHCAP_API::xml_GetNodeValueL(pNode_root, wxT("lPktNum"), 50 );
-
+	m_idxPort   =ISHCAP_API::xml_GetNodeValueL(pNode_root, wxT("idxPort"), 19 );
     int iIndex = 0;
     for ( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM; iIndex++ )
     {
@@ -201,7 +209,7 @@ bool gvVisionManager::gvMgr_runStart( E_PROGRAM_STATUS eStatus )
     e_ProgramStatus = eStatus;
 
     unsigned int iIndex = 0;
-    //1、其次创建图像处理线程
+    //1、其次创建图像处理线程和剔除线程
     for( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM; iIndex++ )
     {
        if(c_pgvVisionCCD[iIndex]->get_using())
@@ -214,6 +222,15 @@ bool gvVisionManager::gvMgr_runStart( E_PROGRAM_STATUS eStatus )
 			}//if( c_pthread_imageproc[iIndex]->Create() != wxTHREAD_NO_ERROR )
 			c_pthread_imageproc[iIndex]->SetPriority( WXTHREAD_MAX_PRIORITY );
 			c_pthread_imageproc[iIndex]->Run();
+
+			c_pthread_rejcProc[iIndex] = new thread_rejcProc( this, iIndex, eStatus );
+			if( c_pthread_rejcProc[iIndex]->Create() != wxTHREAD_NO_ERROR )
+			{
+				wxLogError( wxT("无法创建剔除线程！ ") );
+				return false;
+			}//if( c_pthread_imageproc[iIndex]->Create() != wxTHREAD_NO_ERROR )
+			c_pthread_rejcProc[iIndex]->SetPriority( WXTHREAD_MAX_PRIORITY );
+			c_pthread_rejcProc[iIndex]->Run();
 		}
     }//for( iIndex=0; iIndex<c_pgvVisionManager->gvMgr_GetgvVisionCCDSum(); iIndex++ )
     /**< 打开相机 */
@@ -254,17 +271,26 @@ void gvVisionManager::gvMgr_runStop()
     //停止图像处理线程
     for( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM; iIndex++ )
     {
-        if( c_pthread_imageproc[iIndex] )
-        {
-            c_pthread_imageproc[iIndex]->Delete();
-            c_pthread_imageproc[iIndex] = NULL;
-        }//if( c_pthread_imageproc[iIndex] )
-    }//for( iIndex=0; iIndex<c_pgvVisionManager->gvMgr_GetgvVisionCCDSum(); iIndex++ )
-
-    if( PSTATUS_Inspecting == e_ProgramStatus )
-    {
-        c_pSerialPort->Writev( "C",sizeof("C"),10);
+       if(c_pgvVisionCCD[iIndex]->get_using())
+	   {
+			if( c_pthread_imageproc[iIndex] )
+			{
+				c_pthread_imageproc[iIndex]->Delete();
+				c_pthread_imageproc[iIndex] = NULL;
+			}//if( c_pthread_imageproc[iIndex] )
+			if( c_pthread_rejcProc[iIndex] )
+			{
+				c_pthread_rejcProc[iIndex]->Delete();
+				c_pthread_rejcProc[iIndex] = NULL;
+			}
+	   }
     }
+    //for( iIndex=0; iIndex<c_pgvVisionManager->gvMgr_GetgvVisionCCDSum(); iIndex++ )
+//
+//    if( PSTATUS_Inspecting == e_ProgramStatus )
+//    {
+//        c_pSerialPort->Writev( "C",sizeof("C"),10);
+//    }
 
     e_ProgramStatus = PSTATUS_Loaded;
 }
@@ -289,6 +315,11 @@ bool gvVisionManager::com_Read( long *lFailNum )
         }
     }//if( c_pSerialPort )
     return true;
+}
+
+void gvVisionManager::gvMgr_Reject()
+{
+	c_pgvVisionIO->set_OutputBit(m_idxPort,TRUE);
 }
 
 char gvVisionManager::getAscii( unsigned char ascii )

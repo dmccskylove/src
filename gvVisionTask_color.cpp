@@ -5,6 +5,9 @@ gvVisionTask_color::gvVisionTask_color( E_ROI_TYPE type )
 :gvVisionTask(type)
 {
     m_typeTask = TASKTYPE_COLOR;
+    m_meanBlue=0;
+    m_meanGreen=0;
+    m_meanRed=0;
 }
 
 gvVisionTask_color::~gvVisionTask_color()

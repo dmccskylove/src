@@ -42,7 +42,7 @@ bool gvVisionTask_black::gvTask_inspect( Hobject image_src, Hobject *outRegion_d
 	erosion_circle(RegionFillUp, &RegionErosion, 1.5);
 	connection(RegionErosion, &ConnectedRegions1);
 
-	select_shape(ConnectedRegions1, &SelectedRegions, "area", "and", 100, 5000);
+	select_shape(ConnectedRegions1, &SelectedRegions, "area", "and", m_minBlackSpotArea, 5000);
 	dilation_circle(SelectedRegions, &RegionDilation1, 2.5);
 	intensity(RegionDilation1, Image_meanSmall, &Meancenter, &Deviation);
 	dilation_circle(SelectedRegions, &RegionDilation, 5);
@@ -59,6 +59,10 @@ bool gvVisionTask_black::gvTask_inspect( Hobject image_src, Hobject *outRegion_d
 		}
 	}
 	count_obj((*outRegion_defects), &Number);
+	if(Number>m_maxBlackSpotCnt||Number<m_minBlackSpotCnt )
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -67,7 +71,7 @@ void gvVisionTask_black::gvTask_ReadParam( wxXmlNode* pNode_parent )
     gvVisionTask::gvTask_ReadParam(pNode_parent);
 
 	m_minBlackSpotArea=ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("黑点最小面积"),0);
-	m_BlackGrayDiff=ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("黑点灰度敏感度"),0);
+
 	m_minBlackSpotCnt=ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("黑点最小个数"),0);
 	m_maxBlackSpotCnt =ISHCAP_API::xml_GetNodeValueL(pNode_parent,wxT("黑点最大个数"),0);
 
@@ -78,7 +82,7 @@ void gvVisionTask_black::gvTask_SaveParam( wxXmlNode* pNode_parent )
 {
     gvVisionTask::gvTask_SaveParam(pNode_parent);
 		ISHCAP_API::xml_SetNodeValueL(pNode_parent,wxT("黑点最小面积"),m_minBlackSpotArea);
-		ISHCAP_API::xml_SetNodeValueL(pNode_parent,wxT("黑点灰度敏感度"),m_BlackGrayDiff);
+
 		ISHCAP_API::xml_SetNodeValueL(pNode_parent,wxT("黑点最小个数"),m_minBlackSpotCnt );
 		ISHCAP_API::xml_SetNodeValueL(pNode_parent,wxT("黑点最大个数"),m_maxBlackSpotCnt);
 }

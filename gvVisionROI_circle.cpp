@@ -2,10 +2,10 @@
 
 gvVisionROI_circle::gvVisionROI_circle():gvVisionROI()
 {
-		m_uiX = 250;
-		m_uiY = 300;
-		m_outRadius =100;
-		m_inRadius = 50;
+		m_uiX = 285;
+		m_uiY = 235;
+		m_outRadius =190;
+		m_inRadius = 30;
 		m_isUsing = FALSE;
 }
 
@@ -17,10 +17,10 @@ gvVisionROI_circle::~gvVisionROI_circle()
 bool gvVisionROI_circle::gvROI_ReadParam( wxXmlNode* pNode_parent )
 {
     wxXmlNode   *pNode_roi = ISHCAP_API::xml_GetNode( pNode_parent, wxT("ROI") );
-    m_uiX = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_x"), 250 );
-    m_uiY = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_y"), 300 );
-    m_outRadius = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_outRadius"), 100 );
-    m_inRadius = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_inRadius"), 50 );
+    m_uiX = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_x"), 285 );
+    m_uiY = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_y"), 235 );
+    m_outRadius = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_outRadius"), 190 );
+    m_inRadius = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_inRadius"), 30 );
     m_isUsing = ISHCAP_API::xml_GetNodeValueL(pNode_roi, wxT("roi_isUsing"), 1 ) > 0;
 
     return true;

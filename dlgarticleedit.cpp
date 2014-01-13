@@ -122,7 +122,6 @@ bool dlgArticleEdit::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 	}
 
 
-
 /**<  */
 	unsigned int uiTaskCnt = c_pgvVisionImage->gvIMG_GetTaskCnt();
 	for( iIndex=0; iIndex<uiTaskCnt; iIndex++ )
@@ -133,8 +132,10 @@ bool dlgArticleEdit::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 		int idxType = pgvTask->gvTask_GetType();
 
 	}
+
 /**< 获取定位最小面积 */
 	m_minarea->SetValue(c_pgvVisionImage->gvIMG_GetMinarea()) ;
+
     return true;
 }
 
@@ -224,7 +225,7 @@ void dlgArticleEdit::CreateControls()
     wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x5B9A + (wxChar) 0x4F4D + (wxChar) 0x6700 + (wxChar) 0x5C0F + (wxChar) 0x9762 + (wxChar) 0x79EF), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer13->Add(itemStaticText14, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
-    m_minarea = new wxSpinCtrl( itemDialog1, ID_SPINCTRL5, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_minarea = new wxSpinCtrl( itemDialog1, ID_SPINCTRL5, _T("70000"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 10000, 999999, 70000 );
     itemBoxSizer13->Add(m_minarea, 0, wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT, 5);
 
     m_noteBook = new wxNotebook( itemDialog1, ID_NOTEBOOK5, wxDefaultPosition, wxSize(300, 280), wxBK_DEFAULT );
@@ -401,8 +402,7 @@ void dlgArticleEdit::OnBtnDelUpdate( wxUpdateUIEvent& event )
 void dlgArticleEdit::params_Write()
 {
 	c_pgvVisionImage->gvIMG_SetMinarea(m_minarea->GetValue());
-	wxString filename = c_pgvVisionManager->gvMgr_getConfigFile();
-	c_pgvVisionManager->gvMgr_SaveConfig(filename,FALSE);
+
 }
 
 /*
@@ -412,6 +412,8 @@ void dlgArticleEdit::params_Write()
 void dlgArticleEdit::OnOkClick( wxCommandEvent& event )
 {
 		params_Write();
+		wxString filename = c_pgvVisionManager->gvMgr_getConfigFile();
+		c_pgvVisionManager->gvMgr_SaveConfig(filename,FALSE);
 		EndModal(wxID_OK);
 }
 
@@ -434,7 +436,7 @@ void dlgArticleEdit::OnCancelClick( wxCommandEvent& event )
 
 void dlgArticleEdit::OnSpinctrl5Updated( wxSpinEvent& event )
 {
-	c_pgvVisionImage->gvIMG_SetMinarea(m_minarea->GetValue());
+	//c_pgvVisionImage->gvIMG_SetMinarea(m_minarea->GetValue());
 }
 
 
@@ -444,7 +446,6 @@ void dlgArticleEdit::OnSpinctrl5Updated( wxSpinEvent& event )
 
 void dlgArticleEdit::OnSpinctrl5TextUpdated( wxCommandEvent& event )
 {
-	c_pgvVisionImage->gvIMG_SetMinarea(m_minarea->GetValue());
 }
 
 
@@ -502,6 +503,6 @@ void dlgArticleEdit::OnDirpickerctrlDirPickerChanged( wxFileDirPickerEvent& even
 
 void dlgArticleEdit::OnApplyUpdate( wxUpdateUIEvent& event )
 {
-		event.Enable(0>=m_imgCnt?false:true);
+		event.Enable( 0 >= m_imgCnt ? false : true);
 }
 

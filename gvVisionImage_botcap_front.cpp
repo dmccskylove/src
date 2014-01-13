@@ -31,8 +31,11 @@ bool gvVisionImage_botcap_front::_insp_loc( Hobject image_src, Hobject *outRegio
 	connection(region_dilation, &region_conn);
 	select_shape(region_conn, &region_sel, "area", "and", m_minarea, 999999);
 	count_obj(region_sel, &numRegions);
+
 	if ( 1 == numRegions )
 	{
+		disp_obj(ho_Image,hl_WindowID);
+		disp_obj(region_sel,hl_WindowID);
 		copy_obj(region_sel, &(*outRegion_loc), 1, 1);
 		return true;
 	}

@@ -49,6 +49,7 @@
 					<Add directory="$(HALCONROOT)/lib/x86sse2-win32" />
 					<Add directory="$(PYLON_ROOT)/lib/win32" />
 					<Add directory="$(PYLON_GENICAM_ROOT)/library/CPP/Lib/Win32_i86" />
+					<Add directory="pci7230/Lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -106,6 +107,8 @@
 		<Unit filename="core/gvVisionCam.h" />
 		<Unit filename="core/gvVisionCam_acA.cpp" />
 		<Unit filename="core/gvVisionCam_acA.h" />
+		<Unit filename="core/gvVisionIO_PCI7230.cpp" />
+		<Unit filename="core/gvVisionIO_PCI7230.h" />
 		<Unit filename="core/gvVisionImage.cpp" />
 		<Unit filename="core/gvVisionImage.h" />
 		<Unit filename="core/gvVisionManager.cpp" />
@@ -114,6 +117,8 @@
 		<Unit filename="core/gvVisionROI.h" />
 		<Unit filename="core/thread_imgProc.cpp" />
 		<Unit filename="core/thread_imgProc.h" />
+		<Unit filename="core/thread_rejcProc.cpp" />
+		<Unit filename="core/thread_rejcProc.h" />
 		<Unit filename="dlgSettingsCam.cpp" />
 		<Unit filename="dlgSettingsCam.h" />
 		<Unit filename="dlgarticleedit.cpp" />

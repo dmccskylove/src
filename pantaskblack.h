@@ -36,8 +36,6 @@ class wxSpinCtrl;
 ////@begin control identifiers
 #define ID_PANTASKBLACK 10054
 #define ID_SPINCTRL 10058
-#define wxID_STATI1 10084
-#define ID_SPINCTRL1 10059
 #define ID_SPINCTRL2 10060
 #define ID_SPINCTRL3 10061
 #define SYMBOL_PANTASKBLACK_STYLE wxTAB_TRAVERSAL
@@ -82,12 +80,6 @@ public:
 
 ////@begin panTaskBlack event handler declarations
 
-    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL1
-    void OnSpinctrl1Updated( wxSpinEvent& event );
-
-    /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL1
-    void OnSpinctrl1TextUpdated( wxCommandEvent& event );
-
 ////@end panTaskBlack event handler declarations
 
 ////@begin panTaskBlack member function declarations
@@ -104,7 +96,6 @@ public:
 
 ////@begin panTaskBlack member variables
     wxSpinCtrl* m_minBlackSpotArea;
-    wxSpinCtrl* m_BlackGrayDiff;
     wxSpinCtrl* m_minBlackSpotCnt;
     wxSpinCtrl* m_maxBlackSpotCnt;
 ////@end panTaskBlack member variables

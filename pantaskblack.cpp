@@ -44,9 +44,6 @@ IMPLEMENT_DYNAMIC_CLASS( panTaskBlack, wxPanel )
 BEGIN_EVENT_TABLE( panTaskBlack, wxPanel )
 
 ////@begin panTaskBlack event table entries
-    EVT_SPINCTRL( ID_SPINCTRL1, panTaskBlack::OnSpinctrl1Updated )
-    EVT_TEXT( ID_SPINCTRL1, panTaskBlack::OnSpinctrl1TextUpdated )
-
 ////@end panTaskBlack event table entries
 
 END_EVENT_TABLE()
@@ -87,7 +84,8 @@ bool panTaskBlack::Create( wxWindow* parent, wxWindowID id, const wxPoint& pos, 
     }
     Centre();
 ////@end panTaskBlack creation
-    return true;
+	ReadParam();
+	return true;
 }
 
 
@@ -110,7 +108,6 @@ void panTaskBlack::Init()
 {
 ////@begin panTaskBlack member initialisation
     m_minBlackSpotArea = NULL;
-    m_BlackGrayDiff = NULL;
     m_minBlackSpotCnt = NULL;
     m_maxBlackSpotCnt = NULL;
 ////@end panTaskBlack member initialisation
@@ -142,20 +139,14 @@ void panTaskBlack::CreateControls()
     m_minBlackSpotArea = new wxSpinCtrl( itemStaticBoxSizer3->GetStaticBox(), ID_SPINCTRL, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
     itemGridSizer4->Add(m_minBlackSpotArea, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticText* itemStaticText7 = new wxStaticText( itemStaticBoxSizer3->GetStaticBox(), wxID_STATI1, wxGetTranslation(wxString() + (wxChar) 0x9ED1 + (wxChar) 0x70B9 + (wxChar) 0x7070 + (wxChar) 0x5EA6 + (wxChar) 0x654F + (wxChar) 0x611F + (wxChar) 0x5EA6), wxDefaultPosition, wxDefaultSize, 0 );
+    wxStaticText* itemStaticText7 = new wxStaticText( itemStaticBoxSizer3->GetStaticBox(), wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x9ED1 + (wxChar) 0x70B9 + (wxChar) 0x6700 + (wxChar) 0x5C0F + (wxChar) 0x4E2A + (wxChar) 0x6570), wxDefaultPosition, wxDefaultSize, 0 );
     itemGridSizer4->Add(itemStaticText7, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_BlackGrayDiff = new wxSpinCtrl( itemStaticBoxSizer3->GetStaticBox(), ID_SPINCTRL1, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
-    itemGridSizer4->Add(m_BlackGrayDiff, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxStaticText* itemStaticText9 = new wxStaticText( itemStaticBoxSizer3->GetStaticBox(), wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x9ED1 + (wxChar) 0x70B9 + (wxChar) 0x6700 + (wxChar) 0x5C0F + (wxChar) 0x4E2A + (wxChar) 0x6570), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer4->Add(itemStaticText9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_minBlackSpotCnt = new wxSpinCtrl( itemStaticBoxSizer3->GetStaticBox(), ID_SPINCTRL2, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
     itemGridSizer4->Add(m_minBlackSpotCnt, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    wxStaticText* itemStaticText11 = new wxStaticText( itemStaticBoxSizer3->GetStaticBox(), wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x9ED1 + (wxChar) 0x70B9 + (wxChar) 0x6700 + (wxChar) 0x5927 + (wxChar) 0x4E2A + (wxChar) 0x6570), wxDefaultPosition, wxDefaultSize, 0 );
-    itemGridSizer4->Add(itemStaticText11, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxStaticText* itemStaticText9 = new wxStaticText( itemStaticBoxSizer3->GetStaticBox(), wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x9ED1 + (wxChar) 0x70B9 + (wxChar) 0x6700 + (wxChar) 0x5927 + (wxChar) 0x4E2A + (wxChar) 0x6570), wxDefaultPosition, wxDefaultSize, 0 );
+    itemGridSizer4->Add(itemStaticText9, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     m_maxBlackSpotCnt = new wxSpinCtrl( itemStaticBoxSizer3->GetStaticBox(), ID_SPINCTRL3, _T("0"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
     itemGridSizer4->Add(m_maxBlackSpotCnt, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -199,32 +190,23 @@ wxIcon panTaskBlack::GetIconResource( const wxString& name )
 ////@end panTaskBlack icon retrieval
 }
 
+
+
+
+
+
+
+
+
 void panTaskBlack::ReadParam()
 {
-	m_BlackGrayDiff->SetValue(c_pgvTask->gvTask_GetGraySense()) ;
+	m_minBlackSpotArea->SetValue(c_pgvTask->gvTask_GetminBlackSpotArea());
+	m_minBlackSpotCnt->SetValue(c_pgvTask->gvTask_GetminBlackSpotCnt());
+	m_maxBlackSpotCnt->SetValue(c_pgvTask->gvTask_GetmaxBlackSpotCnt());
 }
 void panTaskBlack::SaveParam()
 {
-	c_pgvTask->gvTask_SetGarySense(m_BlackGrayDiff->GetValue());
+	c_pgvTask->gvTask_SetmaxBlackSpotCnt(m_maxBlackSpotCnt->GetValue());
+	c_pgvTask->gvTask_SetminBlackSpotArea(m_minBlackSpotArea->GetValue());
+	c_pgvTask->gvTask_SetminBlackSpotCnt(m_minBlackSpotCnt->GetValue());
 }
-
-
-/*
- * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINCTRL1
- */
-
-void panTaskBlack::OnSpinctrl1Updated( wxSpinEvent& event )
-{
-	SaveParam();
-}
-
-
-/*
- * wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINCTRL1
- */
-
-void panTaskBlack::OnSpinctrl1TextUpdated( wxCommandEvent& event )
-{
-	SaveParam();
-}
-

@@ -849,6 +849,67 @@
                             </object>
                         </object>
                     </object>
+                    <object class="notebookpage">
+                        <label>剔除</label>
+                        <object class="wxPanel" name="ID_PANEL">
+                            <style>wxTAB_TRAVERSAL</style>
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticText" name="wxID_STATIC">
+                                                <size>100,-1</size>
+                                                <label>剔除延时</label>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxSpinCtrl" name="ID_SPINCTRL6">
+                                                <size>200,-1</size>
+                                                <style>wxSP_ARROW_KEYS</style>
+                                                <value>0</value>
+                                                <min>0</min>
+                                                <max>100</max>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+                                    <border>5</border>
+                                    <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxStaticText" name="wxID_STATIC">
+                                                <size>100,-1</size>
+                                                <label>IO端口</label>
+                                            </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                            <flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                            <border>5</border>
+                                            <object class="wxSpinCtrl" name="ID_SPINCTRL1">
+                                                <size>200,-1</size>
+                                                <style>wxSP_ARROW_KEYS</style>
+                                                <value>0</value>
+                                                <min>0</min>
+                                                <max>100</max>
+                                            </object>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
                 </object>
             </object>
             <object class="sizeritem">
@@ -1038,9 +1099,9 @@
                                         <border>5</border>
                                         <object class="wxSpinCtrl" name="ID_SPINCTRL5">
                                             <style>wxSP_ARROW_KEYS</style>
-                                            <value>0</value>
-                                            <min>0</min>
-                                            <max>100</max>
+                                            <value>70000</value>
+                                            <min>10000</min>
+                                            <max>999999</max>
                                         </object>
                                     </object>
                                 </object>
@@ -1173,23 +1234,6 @@
                                 <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
                                 <border>5</border>
                                 <object class="wxSpinCtrl" name="ID_SPINCTRL">
-                                    <style>wxSP_ARROW_KEYS</style>
-                                    <value>0</value>
-                                    <min>0</min>
-                                    <max>100</max>
-                                </object>
-                            </object>
-                            <object class="sizeritem">
-                                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                <border>5</border>
-                                <object class="wxStaticText" name="wxID_STATI1">
-                                    <label>黑点灰度敏感度</label>
-                                </object>
-                            </object>
-                            <object class="sizeritem">
-                                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
-                                <border>5</border>
-                                <object class="wxSpinCtrl" name="ID_SPINCTRL1">
                                     <style>wxSP_ARROW_KEYS</style>
                                     <value>0</value>
                                     <min>0</min>

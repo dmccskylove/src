@@ -24,6 +24,7 @@
 #include "core/gvVisionManager.h"
 #include "core/gvVisionCCD.h"
 #include "core/gvVisionImage.h"
+#include "core/gvVisionCam.h"
 
 #include "gvVisionImage_botcap.h"
 ////@begin XPM images
@@ -216,6 +217,7 @@ void ISBOTCAPMain::Init()
 
 /**< 创建相关文件夹 */
     wxMkDir( wxGetCwd() + wxT("\\articles\\") );
+    wxMkDir( wxGetCwd() + wxT("\\articles\\Model") );
     wxMkDir( wxGetCwd() + wxT("\\images\\") );
 }
 
@@ -494,10 +496,14 @@ void ISBOTCAPMain::CreateControls()
 
 void ISBOTCAPMain::OnIdle( wxIdleEvent& event )
 {
-////@begin wxEVT_IDLE event handler for ID_ISHCAPMAIN in ISBOTCAPMain.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_IDLE event handler for ID_ISHCAPMAIN in ISBOTCAPMain.
+	bool b1 = c_pgvVisionManager->get_Reject();
+	bool b2 = (c_pgvVisionManager->gvMgr_getStatus()==PSTATUS_Inspecting);
+	if(b1&&b2)
+	{
+		wxMutexLocker lock(m_Mutex);
+		c_pgvVisionManager->gvMgr_Reject();
+		c_pgvVisionManager->set_Reject(false);
+	}
 }
 
 
@@ -958,10 +964,7 @@ void ISBOTCAPMain::OnToolDispUpdate( wxUpdateUIEvent& event )
 
 void ISBOTCAPMain::OnToolSaveimgsClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SAVEIMGS in ISBOTCAPMain.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SAVEIMGS in ISBOTCAPMain.
+
 }
 
 
@@ -1078,10 +1081,15 @@ void ISBOTCAPMain::OnToolCam4Update( wxUpdateUIEvent& event )
 
 void ISBOTCAPMain::OnToolSaveimgClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SAVEIMG in ISBOTCAPMain.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_SAVEIMG in ISBOTCAPMain.
+		wxDateTime date = wxDateTime::Now();
+		gvVisionImage_botcap* pgvImage =(gvVisionImage_botcap*)c_pgvVisionManager->gvMgr_getVisionCCD(m_selectCCD)->get_VisionImage();
+		wxString filename = wxGetCwd()
+		+ wxT("\\images\\tmp\\")
+		+wxString::Format( wxT("%d-%02d-%02d\\CCD%d\\"), date.GetYear(), date.GetMonth()+1, date.GetDay() ,m_selectCCD+1)
+		+wxString::Format( wxT("%02d-%02d-%02d"), (int )date.GetHour(), (int )date.GetMinute(), (int )date.GetSecond())
+		+ wxT(".jpg");
+
+		write_image(pgvImage->gvIMG_GetImage(),"jpg",0,filename);
 }
 
 
@@ -1092,7 +1100,10 @@ void ISBOTCAPMain::OnToolSaveimgClick( wxCommandEvent& event )
 void ISBOTCAPMain::OnToolSaveimgUpdate( wxUpdateUIEvent& event )
 {
 		bool b1 = c_pgvVisionManager->gvMgr_getStatus()!=PSTATUS_Inspecting;
-		event.Enable(b1);
+		bool b3 = c_pgvVisionManager->gvMgr_getStatus()==PSTATUS_Displaying;
+		gvVisionImage_botcap* pgvImage =(gvVisionImage_botcap*)c_pgvVisionManager->gvMgr_getVisionCCD(m_selectCCD)->get_VisionImage();
+		bool b2 = pgvImage->gvIMG_GetisLoadImage();
+		event.Enable(true);
 }
 
 
@@ -1102,10 +1113,10 @@ void ISBOTCAPMain::OnToolSaveimgUpdate( wxUpdateUIEvent& event )
 
 void ISBOTCAPMain::OnToolCamsetClick( wxCommandEvent& event )
 {
-////@begin wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_CAMSET in ISBOTCAPMain.
-    // Before editing this code, remove the block markers.
-    event.Skip();
-////@end wxEVT_COMMAND_MENU_SELECTED event handler for ID_TOOL_CAMSET in ISBOTCAPMain.
+	gvVisionCCD		*pgvVisionCCD = c_pgvVisionManager->gvMgr_getVisionCCD(m_selectCCD);
+	dlgSettingsCam* pdlg = new dlgSettingsCam(pgvVisionCCD,this);
+	pdlg->ShowModal();
+	pdlg->Destroy();
 }
 
 
@@ -1116,7 +1127,8 @@ void ISBOTCAPMain::OnToolCamsetClick( wxCommandEvent& event )
 void ISBOTCAPMain::OnToolCamsetUpdate( wxUpdateUIEvent& event )
 {
 		bool b1 = c_pgvVisionManager->gvMgr_getStatus()!=PSTATUS_Inspecting;
-		event.Enable(b1);
+		bool b2 = c_pgvVisionManager->gvMgr_getVisionCCD(m_selectCCD)->get_VisionCam()->isInit();
+		event.Enable(b1&&b2);
 }
 
 

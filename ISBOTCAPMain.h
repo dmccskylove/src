@@ -306,6 +306,7 @@ public:
 
     int m_selectCCD;
     bool m_isROIMoving;
+    wxMutex				m_Mutex;
 };
 
 #endif
