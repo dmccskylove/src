@@ -59,7 +59,7 @@ class gvVisionImage_botcap : public gvVisionImage
 		void gvIMG_ROIStop();
 		void gvIMG_ROIMove();
 		void gvIMG_SetROImshape(int x,int y);
-
+		wxMutex				m_Mutex;
     protected:
         Hobject         ho_Image;
         Hobject			ho_ROI[30];
@@ -77,6 +77,7 @@ class gvVisionImage_botcap : public gvVisionImage
 		bool		m_bROIMoving;
 		bool 		m_bROISizOut;
 		bool 		m_bloadimage;
+
 
 
 

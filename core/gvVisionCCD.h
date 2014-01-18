@@ -53,7 +53,8 @@ public:
 		{
 			return m_rejectdelay;
 		}
-	std::vector<int>		vec_Result;
+
+	std::vector<struct Result>		vec_Result;
 protected:
     bool				m_isMemory_Ready;
     static DWORD WINAPI cam_imgAcq_callback(LPVOID pContext, BYTE* buffer, int width, int height);
@@ -71,6 +72,7 @@ private:
     /*                                                                      */
     /************************************************************************/
     void init_gvVisionImage();
+
 };
 
 

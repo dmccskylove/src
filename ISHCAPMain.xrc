@@ -876,7 +876,7 @@
                                                 <style>wxSP_ARROW_KEYS</style>
                                                 <value>0</value>
                                                 <min>0</min>
-                                                <max>100</max>
+                                                <max>999999</max>
                                             </object>
                                         </object>
                                     </object>

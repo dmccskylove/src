@@ -500,9 +500,7 @@ void ISBOTCAPMain::OnIdle( wxIdleEvent& event )
 	bool b2 = (c_pgvVisionManager->gvMgr_getStatus()==PSTATUS_Inspecting);
 	if(b1&&b2)
 	{
-		wxMutexLocker lock(m_Mutex);
 		c_pgvVisionManager->gvMgr_Reject();
-		c_pgvVisionManager->set_Reject(false);
 	}
 }
 

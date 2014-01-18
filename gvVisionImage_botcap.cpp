@@ -147,7 +147,7 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 
 	/**< 产品定位 */
 	bool isSuccess = _insp_loc(ho_Image,&region_loc);
-	bool isdefcts 	  = false;
+	bool isPass 	  = true;
 	if( isSuccess )
 	{
 //		wxMessageBox(wxT("定位！"));
@@ -156,7 +156,7 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 		{
 			/**< 缺陷检测 */
 			if(false == vec_pTask.at(iIndex)->gvTask_inspect(ImageReduced,&region_defects))
-			isdefcts =true;
+			isPass =false;
 
 			/**< 缺陷串联 */
 			copy_obj(region_concat_defects,&region_temp1,1,-1);
@@ -166,16 +166,19 @@ void gvVisionImage_botcap::gvIMG_TriggerInspection( bool isTest/* = false*/ )
 
 	Hlong numDefects = 0;
 	count_obj(region_concat_defects,&numDefects);
+	disp_obj(ho_Image,hl_WindowID);
 	if( numDefects > 0)
 	{
 		disp_obj(ho_Image,hl_WindowID);
 		disp_obj(region_concat_defects,hl_WindowID);
-		isdefcts =true;
+		isPass =false;
 	}
-	if(isdefcts)
-	{
-		c_pgvVisionCCD->vec_Result.push_back(c_pgvVisionCCD->get_Rejectdelay());
-	}
+	struct Result reltemp;
+	reltemp.Rejctdelay=c_pgvVisionCCD->get_Rejectdelay();
+	reltemp.Pass		 =isPass;
+	wxMutexLocker lock(m_Mutex);
+		if(m_Mutex.IsOk())
+			c_pgvVisionCCD->vec_Result.push_back(reltemp);
 }
 
 

@@ -182,7 +182,7 @@ void dlgSettingsCam::CreateControls()
     wxStaticText* itemStaticText15 = new wxStaticText( itemPanel12, wxID_STATIC, wxGetTranslation(wxString() + (wxChar) 0x5254 + (wxChar) 0x9664 + (wxChar) 0x5EF6 + (wxChar) 0x65F6), wxDefaultPosition, wxSize(100, -1), 0 );
     itemBoxSizer14->Add(itemStaticText15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_rejectdelay = new wxSpinCtrl( itemPanel12, ID_SPINCTRL6, _T("0"), wxDefaultPosition, wxSize(200, -1), wxSP_ARROW_KEYS, 0, 100, 0 );
+    m_rejectdelay = new wxSpinCtrl( itemPanel12, ID_SPINCTRL6, _T("0"), wxDefaultPosition, wxSize(200, -1), wxSP_ARROW_KEYS, 0, 999999, 0 );
     itemBoxSizer14->Add(m_rejectdelay, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxBoxSizer* itemBoxSizer17 = new wxBoxSizer(wxHORIZONTAL);
@@ -291,6 +291,7 @@ void dlgSettingsCam::OnOkClick( wxCommandEvent& event )
 	SaveParam();
 	wxString filename = c_pgvVisionManager->gvMgr_getConfigFile();
 	c_pgvVisionManager->gvMgr_SaveConfig(filename,FALSE);
+	EndModal(wxID_OK);
 }
 
 
@@ -300,7 +301,9 @@ void dlgSettingsCam::OnOkClick( wxCommandEvent& event )
 
 void dlgSettingsCam::OnCancelClick( wxCommandEvent& event )
 {
-
+	wxString filename = c_pgvVisionManager->gvMgr_getConfigFile();
+	c_pgvVisionManager->gvMgr_LoadConfig(filename);
+	EndModal(wxID_OK);
 }
 
 

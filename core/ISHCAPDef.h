@@ -108,6 +108,12 @@ enum E_ROI_TYPE
 	ROITYPE_RECT,
 };
 
+	struct Result
+{
+	bool Pass;
+	int 	Rejctdelay;
+};
+
 /**< 以下为全局函数 */
 namespace ISHCAP_API
 {
