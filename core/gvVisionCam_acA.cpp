@@ -126,8 +126,8 @@ void gvVisionCam_acA::cam_Init( ImageGrabbedCallback pCallback, LPVOID pContext 
     CEnumerationPtr TriggerSource( iNodemap.GetNode( "TriggerSource"));
     TriggerSource->SetIntValue(1);
     CEnumerationPtr TriggerActivation( iNodemap.GetNode( "TriggerActivation"));
-    TriggerActivation->SetIntValue(0);//ÉÏÉýÑØ
-    //TriggerActivation->SetIntValue(1);//ÏÂ½µÑØ
+    //TriggerActivation->SetIntValue(0);//ÉÏÉýÑØ
+    TriggerActivation->SetIntValue(1);//ÏÂ½µÑØ
     ///////////////////////////////////////////////////////////////////
     m_pCallback = pCallback;
     m_pContext = pContext;

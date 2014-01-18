@@ -12,7 +12,8 @@ protected:
 private:
     gvVisionManager		*c_pgvVisionManager;
     unsigned int		m_idxCam;
-     std::vector<Result>::iterator itr_Rejct;
+     std::vector<int>::iterator itr_Rejct;
     E_PROGRAM_STATUS	e_ProgramStatus;
+	wxMutex				m_Mutex;
 };
 

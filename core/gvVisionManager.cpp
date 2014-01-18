@@ -17,7 +17,6 @@ gvVisionManager::gvVisionManager( )
         c_pgvVisionCCD[iIndex] = nullptr;
         c_pthread_imageproc[iIndex] = NULL;
         c_pthread_rejcProc[iIndex] = NULL;
-        m_bReject[iIndex]=false;
         //m_hEvent_io[iIndex] = nullptr;
     }//for ( iIndex=0; iIndex<HGV_SUPPORT_CAMERANUM;iIndex++ )
 
@@ -27,7 +26,7 @@ gvVisionManager::gvVisionManager( )
     m_isEMG = false;
 	m_idxActiveCCD =1;
     e_ProgramStatus = PSTATUS_unLoad;
-
+    m_bReject =false;
 }
 
 
@@ -321,33 +320,6 @@ bool gvVisionManager::com_Read( long *lFailNum )
 void gvVisionManager::gvMgr_Reject()
 {
 	c_pgvVisionIO->set_OutputBit(m_idxPort,TRUE);
-	wxMutexLocker lock(m_Mutex);
-	if(m_Mutex.IsOk())
-	{
-			for(int iIndex=0;iIndex<HGV_SUPPORT_CAMERANUM;iIndex++)
-		{
-			if(gvMgr_getVisionCCD(iIndex)->get_using())
-			{
-				m_bReject[iIndex]=false;
-			}
-		}
-	}
-//	wxMessageBox(wxT("reject"));
-}
-
-
-bool gvVisionManager::get_Reject()
-{
-	int iIndex =0;
-	bool reject = true;
-	for(iIndex=0;iIndex<HGV_SUPPORT_CAMERANUM;iIndex++)
-	{
-		if(gvMgr_getVisionCCD(iIndex)->get_using())
-		{
-			reject = reject&&m_bReject[iIndex];
-		}
-	}
-	return reject;
 }
 
 char gvVisionManager::getAscii( unsigned char ascii )

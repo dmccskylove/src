@@ -67,7 +67,8 @@ public:
     }
 
 	void 						gvMgr_Reject();
-    bool 						get_Reject();
+    bool 						get_Reject(){return m_bReject;}
+    void 						set_Reject(bool reject){m_bReject = reject;}
     long					get_FailNum();
     bool                    com_Write();
     bool                    com_Read( long *lFailNum );
@@ -83,9 +84,6 @@ public:
     //记录机器运行速度
     double				m_tFirstGrab;//相机第一次采集的时刻
     double				m_tInterval;//相机2次采集的间隔
-
-	bool 						m_bReject[HGV_SUPPORT_CAMERANUM];
-	wxMutex				m_Mutex;
 protected:
     gvVisionCCD			*c_pgvVisionCCD[HGV_SUPPORT_CAMERANUM];
     thread_imgProc      *c_pthread_imageproc[HGV_SUPPORT_CAMERANUM];
@@ -94,7 +92,7 @@ protected:
     gvVisionIO_pci7230 *c_pgvVisionIO;
     //////////////////////////////////////////////////////////////////////////
     E_PROGRAM_STATUS	e_ProgramStatus;
-
+    bool 						m_bReject;
 private:
     long        m_lPktNum;/**< 单包总数 */
     wxString	m_strConfigFile;
